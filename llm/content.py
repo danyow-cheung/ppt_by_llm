@@ -128,7 +128,8 @@ def re_match_content(str_content,page):
         return None 
     
     print('==='*10)
-    
+    return content_list 
+
 #     setup_json(content_list[0])
 
 # def setup_json(content_list):
