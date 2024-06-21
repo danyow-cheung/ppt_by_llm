@@ -3,44 +3,6 @@ from pptx import Presentation
 import re
 
 
-# 输出格式
-# output_format=json.dumps({
-#         "title":"example title",
-#         "pages":[
-#             {
-#                 "title": "title for page 1",
-#                 "content": [
-#                     {
-#                         "title": "title for paragraph 1",
-#                         "description": "detail for paragraph 1",
-#                     },
-#                     {
-#                         "title": "title for paragraph 2",
-#                         "description": "detail for paragraph 2",
-#                     },
-#                 ],
-#             },
-#             {
-#                 "title": "title for page 2",
-#                 "content": [
-#                     {
-#                         "title": "title for paragraph 1",
-#                         "description": "detail for paragraph 1",
-#                     },
-#                     {
-#                         "title": "title for paragraph 2",
-#                         "description": "detail for paragraph 2",
-#                     },
-#                     {
-#                         "title": "title for paragraph 3",
-#                         "description": "detail for paragraph 3",
-#                     },
-#                 ],
-#             },
-#         ],
-#     },ensure_ascii=True)
-
-
 # 生成PPT文件
 def generate_ppt_file(topic,ppt_content):
     print("ppt_content",type(ppt_content))
@@ -82,35 +44,14 @@ def keep_chinese_english_and_angle_brackets(text):
 def re_match_content(str_content,page):
     '''
     receive str and return dcit '''
-    #! 下面的方式太模糊了，不好区分
-    # pure_content = keep_chinese_english_and_angle_brackets(str_content)
-    # pure_content = "".join(pure_content)
-    # print(pure_content,type(pure_content))
-
-
-    # ! 第二种方法，感觉也复杂了
-    # content_split_list = []
-    # left = 0 
-    # right = left+1 
-    # while left <= len(str_content):
-        # if str_content[left]== "<":
-        #     # 还没找到
-        #     print('找到了',left)
-        #     right = left +1 
-        #     while str_content[right]!=">":
-        #         right+=1 
-        #     print('当前right',left,right)
-
-        #     break
-
-        # left +=1 
+   
     if str_content is None:
         return 
     
     #! 直接用<start>来区分
     content_list = []
     split_list = str_content.split("<start>")
-    print(split_list)
+    # print(split_list)
     for i in split_list:
         
         temp_list = i.split("\n\n") 
@@ -130,12 +71,6 @@ def re_match_content(str_content,page):
     print('==='*10)
     return content_list 
 
-#     setup_json(content_list[0])
-
-# def setup_json(content_list):
-#     sub_list = content_list.split("\n")
-
-#     print('sub_list',sub_list)
     
 def generate_ppt_content(topic,pages):
     '''
