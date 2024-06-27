@@ -1,7 +1,9 @@
 */__pycache__
 */*/__pycache__
 *.pptx 
-images/*.png
-images/*.jpeg
-images/*.jpg 
-output/*.pptx
+*/*.pptx 
+*/*.png
+*/*.jpeg
+*/*.jpg 
+*/*.pptx
+env/

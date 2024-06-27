@@ -1,0 +1,6 @@
+lmdeploy
+python-pptx
+openai
+gradio
+timm
+'pybind11>=2.12'.

@@ -13,7 +13,10 @@
 <img src = "pre/demo3.jpg">
 <img src = "pre/demo1.jpg">
 
-
+## todo
+1. 文字图片自动识别并进行排版
+    使用`OpenGVLab/Mini-InternVL-Chat-4B-V1-5`来进行图文匹配
+    
 
 ## 参考项目
 1. https://github.com/otahina/PowerPoint-Generator-Python-Project
