@@ -38,8 +38,19 @@ def version_003():
     '''
     basic_usage()
 
+def doc_main():
+    '''
+    20240703
+    '''
+    # 启动程序
+    from auto2ppt_summary import Doc2ppt 
 
+    doc = Doc2ppt()
+    text_list = doc.read_doc(r"data\word\20240621_100458_short.docx")
+    doc.split_summary_doc(text_list)
+    
 if __name__=="__main__":
-    version_003()
+    # version_003()
+    doc_main()
 
 

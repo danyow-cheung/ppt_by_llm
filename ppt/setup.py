@@ -93,16 +93,6 @@ def basic_usage():
 
     ppt.save(f'output/Test_{int(time.time())}.pptx')
 
-def generate_ppt_file_small_img():
-    slide_width = Inches(20)
-    slide_height = Inches(15)
-    image_width = Inches(8)  # width of image
-    image_height = Inches(5)  # height of image
-
-    left = slide_width - image_width  # calculate left position
-    top = slide_height - image_height - Inches(4)  # calculate top position
-
-    # slide.shapes.add_picture(image_stream, left, top, width=image_width, height=image_height)
     
 # 生成背景自定义的PPT文件
 def generate_ppt_file_bg(content_list,topic,image_path):

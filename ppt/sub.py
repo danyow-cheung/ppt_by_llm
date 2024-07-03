@@ -1,6 +1,6 @@
 from pptx import Presentation
 import time 
-from pptx.util import Inches
+from pptx.util import Inches,Cm 
 import random 
 
 
@@ -69,3 +69,43 @@ def random_concate(main_topic,images_list,text_list):
 
     ppt.save(f'output/Test_{int(time.time())}.pptx')
     
+class PptGenerator:
+    def __init__(self) -> None:
+        self.ppt=Presentation()
+
+    def pure_text_generate(self,topic:str,content_list:list,title_list:list):
+
+        slide=self.ppt.slides.add_slide(self.ppt.slide_layouts[0]) # title&subtitle layout
+        # 首页
+        slide.placeholders[0].text=topic
+        slide.placeholders[1].text="author:danyow"
+        # 内容页
+        # slide = self.ppt.slides.add_slide(self.ppt.slide_layouts[9])
+        
+        for i,page in enumerate(zip(content_list,title_list)):
+            content = page[0]            
+            title = page[1]
+            slide=self.ppt.slides.add_slide(self.ppt.slide_layouts[1])
+
+            first = slide.placeholders[0].text=title 
+            second = slide.placeholders[1].text_frame.add_paragraph()
+            second.text = content 
+            second.word_wrap=True
+
+
+        # 结束页
+        slide=self.ppt.slides.add_slide(self.ppt.slide_layouts[0]) 
+        slide.placeholders[0].text="Thanks for watching "
+        slide.placeholders[1].text="author:danyow"
+
+        self.ppt.save(f'output/{topic}.pptx')
+
+
+        print("ppt生成完成")
+
+    def add_bg(self,slide,image_path,ppt,left=Inches(0),top=Inches(0)):
+        pic = slide.shapes.add_picture(image_path, left, top, width=ppt.slide_width, height=ppt.slide_height)
+        slide.shapes._spTree.remove(pic._element)
+        slide.shapes._spTree.insert(2, pic._element)
+        return slide 
+
