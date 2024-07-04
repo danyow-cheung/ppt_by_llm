@@ -8,4 +8,4 @@
 */*.pptx
 env/
 ckpt/
-
+__pycache__
