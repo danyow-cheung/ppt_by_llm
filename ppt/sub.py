@@ -54,16 +54,17 @@ class PptGenerator:
         return slide 
 
     
-    def image_text_generate(self,topic:str,content_list:list,title_list:list,images_list:list,image_list:list):
+    def image_text_generate(self,topic:str,content_list:list,title_list:list,images_list:list,mapping_dict:dict):
         
         # 首页
         slide = self.welcome_page(topic)
         #! 下面的情况是图片和文字长度相同
-        if len(image_list)==len(content_list):
+        if len(images_list)==len(content_list):
             slide = self.same_length_ppt(images_list,content_list,title_list)
         
-        elif len(images_list)<len(content_list):
-            raise NotImplementedError 
+        #todo:不同长度需要进行匹配
+        elif len(images_list)!=len(content_list):
+            slide = self.different_length_ppt(images_list,content_list,title_list,mapping_dict)
         
         else:
             pass 
@@ -71,8 +72,24 @@ class PptGenerator:
         # 结束页
         slide = self.end_page()
         self.ppt.save(f"output/{int(time.time())}_{topic}.pptx")
+        print("ppt生成完成")
 
+    def different_length_ppt(self,images_list,content_list,title_list,mapping):
+        #! 一段文字可以对应多个图片的，这里暂时以一段文字对应一个图片为主
+        # if 
+        # print("mapping",mapping)
+        for idx , value in enumerate(zip(content_list,title_list)):
+            content,title = value 
+            # if idx in 
+            if mapping.get(idx): 
+                image_path = mapping.get(idx)
+                slide = self.Img2Text(content,image_path,title)
+            else:
+                slide = self.TextOnly(content,title)
+        return slide 
     
+
+
     def same_length_ppt(self,images_list,content_list,title_list):
         for idx,value in enumerate(zip(images_list,content_list,title_list)): 
             image,text,title = value            
@@ -80,7 +97,7 @@ class PptGenerator:
                 slide = self.Text2Img(text,image,title)
             else:
                 # Odd
-                slide = Img2Text(text,image,title)
+                slide = self.Img2Text(text,image,title)
         
         return slide 
     
@@ -113,3 +130,13 @@ class PptGenerator:
         right_box_frame.word_wrap = True # 自动换行
         right_box_frame.text = text_content
         return slide 
+    
+
+    def TextOnly(self,text_content,title):
+        slide=self.ppt.slides.add_slide(self.ppt.slide_layouts[1])
+        slide.placeholders[0].text=title 
+        second = slide.placeholders[1].text_frame.add_paragraph()
+        second.text = text_content 
+        second.word_wrap=True
+        return slide 
+    

@@ -1,11 +1,9 @@
 import os 
-from ppt.setup import  basic_usage
-from ppt.sub import random_concate
-from llm.content import chat 
 from docx import Document
 import numpy as np 
 import re 
 from config.info import OneAPI
+from cn_clip.inference import feature_match 
 
 def remove_special_characters(input_string):
     pattern = re.compile(r'[\u4e00-\u9fa5\d]+')
@@ -14,9 +12,8 @@ def remove_special_characters(input_string):
 
 class Doc2ppt:
     def __init__(self,max_word_count) -> None:
-        # self.max_word_count = 5000  # 最大文字数为5k-1w
-        # self.max_word_count = 4000  # 最大文字数为5k-1w
         self.max_word_count = max_word_count
+        self.similarity_score = 0.5 # 图文的相似度阈值
 
         self.one = OneAPI()
     def read_doc(self,doc_path):
@@ -126,22 +123,21 @@ class Doc2ppt:
 
 
 
-    def send2ppt(self,topic:str,content_list:list,title_list:list,flag:bool,image_list:list):
+    def send2ppt(self,topic:str,content_list:list,title_list:list,flag:bool,image_list=None,mapping_dict=None):
         from ppt.sub import PptGenerator
         ppt = PptGenerator()
         if flag==True:
-
             ppt.pure_text_generate(topic,content_list,title_list)
         else:
-            # todo: 图文匹配的ppt
-            ppt.image_text_generate(topic,content_list,title_list,image_list)
+            ppt.image_text_generate(topic,content_list,title_list,image_list,mapping_dict)
 
 
-    def split_sumary_doc_with_imgs(self,text_lists,images_list):
+    def split_summary_doc_with_imgs(self,text_lists,images_list):
         '''
         分割后的逻辑代码
         20240704,最简单的文本生成ppt
         '''
+
         result = self.split_summary_algo(text_lists)
 
         ready_text ={"topic":None,"content_list":None,"sub_title":None}
@@ -163,9 +159,29 @@ class Doc2ppt:
             left +=1 
             ready_list.append(short_sub)
             ready_title.append(short_title)
+
+        mapping_dict = self.handle_similarity(images_list,ready_list)
         
         flag=  False 
-        self.send2ppt(title,ready_list,ready_title,flag,images_list)
+        self.send2ppt(title,ready_list,ready_title,flag,images_list,mapping_dict)
+    
+    def handle_similarity(self,images_list,listb):
+        mapping_dict = {}  #过滤掉
+        for image in images_list:
+            probs = feature_match(image,listb)   
+            # print('probs',probs)
+            max_val =np.max(probs)
+            max_val_index = np.argmax(probs)
+            if max_val >= self.similarity_score:
+                mapping_dict[max_val_index] = image
+
+            else:
+                print('图文相似度太低')
+                pass 
+        return mapping_dict 
+    
+
+
 
 if __name__ =="__main__":
     pass 
