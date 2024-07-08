@@ -29,24 +29,15 @@ def re_match_content(str_content,page):
 
         if "<end>" in temp_list:
             for sub in temp_list:
-                if len(sub)!=0 and sub !='<end>':
+                if len(sub)>=3 and sub !='<end>' :
                     content_list.append(sub)
 
-    print('----'*10)
-    # print("content_list",content_list)
-    print(len(content_list))
-    print('----'*10)
+    print('len(content_list)',len(content_list))
 
-    if len(content_list)==0:
-        # return "划分错误"
-        re_match_content(str_content,page)
-
-
-    if len(content_list)!= page: # 作为是否切分够好的标志
-        # return None 
-        re_match_content(str_content,page)
-
-    print('==='*10)
+    # if len(content_list)==0 or  len(content_list)!= page: # 作为是否切分够好的标志
+    if len(content_list)==0 :
+        return None 
+    
     return content_list 
 
     

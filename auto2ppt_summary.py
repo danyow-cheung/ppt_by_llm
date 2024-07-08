@@ -64,11 +64,12 @@ class Doc2ppt:
     
 
     def llm_content(self,sub ):
-        short_sub = self.one.post_v2(f"帮我将下面的输入进行文字的简化,如果输入文字超过了200字，需要简化到200字以内，{sub}")
+        short_sub = self.one.post_v2(f"帮我将下面的输入进行文字的简化,如果输入文字超过了200字，需要简化到200字以内，{sub}",model = "Qwen2-7B-Instruct")
         return short_sub 
 
     def llm_title(self,sub):
-        short_title = self.one.post_v2(f"阅读下面的文字，然后输出标题，字数限制在 10字以内。文字：{sub}")    
+        short_title = self.one.post_v2(f"阅读下面的文字，然后输出标题，字数限制在 10字以内。文字：{sub}",model = "Qwen2-7B-Instruct")
+
         return short_title 
     
     def split_summary_doc(self,text_lists):

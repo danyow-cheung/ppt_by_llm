@@ -1,5 +1,5 @@
 from utils.clean_txt import simple_sentenct_split 
-from auto2ppt_summary import Doc2ppt 
+from auto2ppt_summary import Doc2ppt ,remove_special_characters
 from llm.content import generate_ppt_content,re_match_content
 from ppt.setup import generate_ppt_file
 
@@ -7,8 +7,12 @@ def web_interfacee(text):
     '''
     多段文本段生成ppt
     '''
-    
-    doc = Doc2ppt(max_word_count=5000)
+    pure_text = remove_special_characters(text)
+    print("type()",type(pure_text))
+
+    diff = 300
+    doc = Doc2ppt(max_word_count=(len(pure_text)+diff))
+
     text_list = simple_sentenct_split(text)
     print("当前text_list",len(text_list))
     ppt_path = doc.split_summary_doc(text_list)
@@ -23,10 +27,14 @@ def top_inference(topic,page):
         
     content_list = re_match_content(content,page)
     if content_list is None:
-        raise ValueError 
+        print("生成失败，再试一次")
+        return None 
     
     ppt_path = generate_ppt_file(content_list,topic,page)
     return ppt_path 
+
+
+
 if __name__ =="__main__":
     topic = '快乐星球'
     pages = 5 
