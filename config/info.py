@@ -18,13 +18,12 @@ class OneAPI:
         self.client = OpenAI(api_key=api_key, base_url=api_base)
 
     def post_v2(self,content,model="chatglm3-6b-251"):
-
-
         chat_completion = self.client.chat.completions.create(
             messages=[
                 {"role": "user", "content": f"{content}"}
             ],
-            model="chatglm3-6b-251"
+            model=model
+            
             )
         return chat_completion.choices[0].message.content 
     

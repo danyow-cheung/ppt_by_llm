@@ -3,7 +3,7 @@ from docx import Document
 import numpy as np 
 import re 
 from config.info import OneAPI
-from cn_clip.inference import feature_match 
+
 
 def remove_special_characters(input_string):
     pattern = re.compile(r'[\u4e00-\u9fa5\d]+')
@@ -82,7 +82,7 @@ class Doc2ppt:
         ready_list = []
         ready_title=[]
         
-        title = self.one.post_v2(f"阅读下面的文字，然后输出标题 文字：{text_lists}")
+        title = self.one.post_v2(f"阅读下面的文字，然后输出标题 文字：{text_lists}", model = "Qwen2-7B-Instruct")
         ready_text['topic'] = title 
         title = title[3:] 
 
@@ -98,7 +98,7 @@ class Doc2ppt:
             ready_list.append(short_sub)
             ready_title.append(short_title)
 
-        self.send2ppt(title,ready_list,ready_title,flag=True) 
+        return self.send2ppt(title,ready_list,ready_title,flag=True) 
 
 
     def content_loop(self,sub):
@@ -127,24 +127,26 @@ class Doc2ppt:
         from ppt.sub import PptGenerator
         ppt = PptGenerator()
         if flag==True:
-            ppt.pure_text_generate(topic,content_list,title_list)
+            ppt_path = ppt.pure_text_generate(topic,content_list,title_list)
         else:
-            ppt.image_text_generate(topic,content_list,title_list,image_list,mapping_dict)
+            ppt_path = ppt.image_text_generate(topic,content_list,title_list,image_list,mapping_dict)
 
-
+        return ppt_path 
+    
     def split_summary_doc_with_imgs(self,text_lists,images_list):
         '''
         分割后的逻辑代码
         20240704,最简单的文本生成ppt
         '''
-
+        return NotImplementedError 
+    
         result = self.split_summary_algo(text_lists)
 
         ready_text ={"topic":None,"content_list":None,"sub_title":None}
         ready_list = []
         ready_title=[]
         
-        title = self.one.post_v2(f"阅读下面的文字，然后输出标题 文字：{text_lists}")
+        title = self.one.post_v2(f"阅读下面的文字，然后输出标题 文字：{text_lists}",model = "Qwen2-7B-Instruct")
         ready_text['topic'] = title 
         title = title[3:] 
 
@@ -163,10 +165,12 @@ class Doc2ppt:
         mapping_dict = self.handle_similarity(images_list,ready_list)
         
         flag=  False 
-        self.send2ppt(title,ready_list,ready_title,flag,images_list,mapping_dict)
+        return self.send2ppt(title,ready_list,ready_title,flag,images_list,mapping_dict)
     
     def handle_similarity(self,images_list,listb):
+        from cn_clip.inference import feature_match 
         mapping_dict = {}  #过滤掉
+
         for image in images_list:
             probs = feature_match(image,listb)   
             # print('probs',probs)

@@ -35,7 +35,10 @@ def generate_ppt_file(content_list,topic,page):
         # break 
 
     # ppt.save('%s.pptx'%topic)
-    ppt.save(f'{topic}_{int(time.time())}.pptx')
+    file_path = f'{topic}_{int(time.time())}.pptx'
+    ppt.save(file_path)
+    return file_path 
+
 
 
 def basic_usage():

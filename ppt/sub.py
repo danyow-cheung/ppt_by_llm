@@ -40,12 +40,12 @@ class PptGenerator:
 
         # 结束页
         slide = self.end_page()
+        ppt_path = f"output/{int(time.time())}_{topic}.pptx"
 
-
-        self.ppt.save(f"output/{int(time.time())}_{topic}.pptx")
-
-
+        self.ppt.save(ppt_path)
         print("ppt生成完成")
+        return ppt_path 
+    
 
     def add_bg(self,slide,image_path,ppt,left=Inches(0),top=Inches(0)):
         pic = slide.shapes.add_picture(image_path, left, top, width=ppt.slide_width, height=ppt.slide_height)
@@ -71,9 +71,11 @@ class PptGenerator:
 
         # 结束页
         slide = self.end_page()
-        self.ppt.save(f"output/{int(time.time())}_{topic}.pptx")
+        ppt_path = f"output/{int(time.time())}_{topic}.pptx"
+        self.ppt.save(ppt_path)
         print("ppt生成完成")
-
+        return ppt_path 
+    
     def different_length_ppt(self,images_list,content_list,title_list,mapping):
         #! 一段文字可以对应多个图片的，这里暂时以一段文字对应一个图片为主
         # if 
